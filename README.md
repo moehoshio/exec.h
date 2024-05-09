@@ -32,9 +32,12 @@ here are some more examples:
 
 ```cpp
 #include "exec.h"
+
     std::string boolStr = exec::boolTo(false);// std::string "false"
+
     auto boolS2 = exec::boolTo<const char *>(true,"t","f");// "t"
-    decltype(auto) it = exec::copy(std::min(std::string("1"),std::string("02")) );// string "1"
+    
+    decltype(auto) minStr = exec::copy(std::min(std::string("1"),std::string("02")) );// string "1"
 
     decltype(auto) strShadPtr = std::string("str") | exec::move | exec::make_shared; //std::shared_ptr<std::string>
 
@@ -56,3 +59,7 @@ here are some more examples:
 
 Welcome to  submit questions, light up star , error corrections (even just for better translations), and feature suggestions/construction.  
 More content will continue to be added in the future. :D
+
+Look at these again:  
+
+- [one.h](https://github.com/moehoshio/one.h)
