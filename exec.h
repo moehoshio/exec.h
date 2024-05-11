@@ -1,11 +1,12 @@
-    // exec.h
-    // cpp Lang
-    // Version 0.01
-    // https://github.com/moehoshio/exec.h
-    // MIT License
-    // Welcome to  submit questions, light up star , error corrections (even just for better translations), and feature suggestions/construction.
-    // :D
+// exec.h
+// cpp Lang
+// Version 0.01
+// https://github.com/moehoshio/exec.h
+// MIT License
+// Welcome to  submit questions, light up star , error corrections (even just for better translations), and feature suggestions/construction.
+// :D
 /*
+MIT License
 Copyright (c) 2024 Hoshi
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -34,30 +35,41 @@ SOFTWARE.
 #include <regex>
 #include <string>
 
-#if (__cplusplus >= 202002L)
-    #define CONSTEXPR_ENABLE constexpr
-#else 
-    #define CONSTEXPR_ENABLE
-#endif
-
-CONSTEXPR_ENABLE inline decltype(auto) operator|(auto &&val, auto &&func) {
+constexpr inline decltype(auto) operator|(auto &&val, auto &&func) {
     return func(std::forward<decltype(val)>(val));
 }
 
 namespace exec {
 
-    CONSTEXPR_ENABLE auto move = [](auto &&val) -> auto && { return std::move(val); };
-    CONSTEXPR_ENABLE auto make_shared = [](auto &&val) -> decltype(auto) { return std::make_shared<std::remove_reference_t<decltype(val)>>(val); };
-    CONSTEXPR_ENABLE inline  auto copy(const auto &d) {
+    constexpr auto move = [](auto &&val) -> auto && { return std::move(val); };
+    constexpr auto make_shared = [](auto &&val) -> decltype(auto) { return std::make_shared<std::remove_reference_t<decltype(val)>>(val); };
+    
+    constexpr inline auto copy(const auto &d) {
         return d;
     };
 
     template <typename T = std::string>
-    CONSTEXPR_ENABLE inline static T boolTo(bool v, const T &rTrue = "true", const T &rFalse = "false") {
+    constexpr inline static T boolTo(bool v, const T &rTrue = "true", const T &rFalse = "false") {
         return ((v) ? rTrue : rFalse);
     };
 
-    inline  std::string getTimeString(const char *Format = "%Y-%m-%d-%H-%M-%S") {
+    constexpr inline decltype(auto) sum(auto&&... args) {
+        return (args + ...);
+    };
+
+    constexpr inline decltype(auto) product(auto&&... args) {
+        return (args * ...);
+    };
+
+    constexpr inline bool allTrue(auto&&... args) {
+        return (true && ... && args);
+    };
+
+    constexpr inline bool anyTrue(auto&&... args) {
+        return (false || ... || args);
+    };
+
+    inline std::string getTimeString(const char *Format = "%Y-%m-%d-%H-%M-%S") {
         auto currentTimePoint = std::chrono::system_clock::now();
 
         std::time_t currentTime = std::chrono::system_clock::to_time_t(currentTimePoint);
@@ -67,7 +79,8 @@ namespace exec {
         std::strftime(timeString, sizeof(timeString), Format, currentTm);
         return std::string(timeString);
     };
-    inline  std::string generateUUID(int Digits = 32) {
+
+    inline std::string generateUUID(int Digits = 32) {
         std::random_device rd;
         std::mt19937 gen(rd());
         std::uniform_int_distribution<> dis(0, 15);
@@ -82,17 +95,16 @@ namespace exec {
                 uuid += hex_chars[dis(gen)];
             }
         }
-
         return uuid;
     };
 
     // A random number , default with a maximum of 9 digits, it could be 0.
-    inline  size_t randNums(std::pair<int,int> digits = {1,9}) {
+    inline size_t randNums(std::pair<int, int> digits = {1, 9}) {
         std::random_device rd;
         std::mt19937 rng(rd());
 
         std::uniform_int_distribution<int> distribution(0, 9);
-        std::uniform_int_distribution<int> numsD2(digits.first,digits.second);
+        std::uniform_int_distribution<int> numsD2(digits.first, digits.second);
         std::string randomString;
         std::string numsList("0123456789");
         for (int i = 0; i < numsD2(rng); ++i) {
@@ -100,7 +112,8 @@ namespace exec {
         }
         return std::stoull(randomString);
     }
-    inline  std::string generateRandomString(int length, const std::string characters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789") {
+
+    inline std::string generateRandomString(int length, const std::string characters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789") {
 
         std::random_device rd;
         std::mt19937 rng(rd());
@@ -111,16 +124,15 @@ namespace exec {
         for (int i = 0; i < length; ++i) {
             randomString += characters[distribution(rng)];
         }
-
         return randomString;
     };
 
-    inline  bool isUrl(const std::string &str) {
+    inline bool isUrl(const std::string &str) {
         std::regex url_regex("(http|https)://[a-zA-Z0-9\\-\\.]+\\.[a-zA-Z]{2,3}(/\\S*)?");
         return std::regex_match(str, url_regex);
     };
 
-    inline  bool isProxyAddress(const std::string &address) {
+    inline bool isProxyAddress(const std::string &address) {
         std::regex proxyRegex(R"((http|https|socks5|socks4)://([\w.-]+)(:\d+))");
         return std::regex_match(address, proxyRegex);
     };

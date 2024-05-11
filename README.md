@@ -1,6 +1,14 @@
 # exec.h
 
-This is also an extremely concise header-only C++ library that provides some practical features and encapsulation.
+This is a an extremely concise header-only C++ library that provides some practical features and encapsulation.
+
+- Cross-platform and dependency-free (only relies on the standard library).
+- Header-only.
+- Modern C++.
+
+Look at these again:  
+
+- [one.h](https://github.com/moehoshio/one.h)
 
 For example:
 
@@ -24,10 +32,10 @@ And, using the pipe operator (`|`) for chaining and enhancing the readability of
 decltype(auto) strShadPtr = std::string("str") | exec::move | exec::make_shared; //std::shared_ptr<std::string>
 ```
 
-- Cross-platform and dependency-free (only relies on the standard library).
-- Header-only.
-- Modern C++.
-
+C++ Standard:  
+Requires C++20 or above.  
+Currently, mainly due to the use of constexpr and simplified function templates. If you modify them, there should be no issues.  
+  
 here are some more examples:
 
 ```cpp
@@ -41,25 +49,32 @@ here are some more examples:
 
     decltype(auto) strShadPtr = std::string("str") | exec::move | exec::make_shared; //std::shared_ptr<std::string>
 
-    auto/*std::string*/ strTime = exec::getTimeString();//2024-01-01-00-01-01 or custom format 
+    auto/*std::string*/ strTime = exec::getTimeString("%Y-%m-%d-%H-%M-%S");//2024-01-01-00-01-01 or custom format 
     
-    auto/*std::string*/ uuid = exec::generateUUID();//32 digits uuid
+    auto/*std::string*/ uuid = exec::generateUUID(32);//32 digits uuid
 
     auto/*std::string*/ strRand = exec::generateRandomString(10); // 10 digits a-Z and 0-9  or custom format
 
-    size_t nums = exec::randNums();// default 0-999999999 (9 digits)
+    size_t nums = exec::randNums({1,9});// default 0-999999999 (9 digits)
 
     bool isUrl =  exec::isUrl("https://example.com"); // true
     bool isProxy = exec::isProxyAddress("http://example.com"); //false
 
     auto boolTo = [](bool v) -> decltype(auto) { return exec::boolTo(v); };
 
-    std::cout<< (std::string("http://example.com:1082") | exec::isProxyAddress | boolTo) ; // std::string "true"
+    std::cout<< (std::string("http://example.com:1082") | exec::isProxyAddress | boolTo) ; // cout std::string "true"
+    
+    constexpr int i = exec::sum(1,2,3);
+
+    constexpr int i2 = exec::product(1,2,3); //6
+
+    auto it = exec::sum(std::string("str1 "),std::string("str2 "),std::string("str3\n"));//"str1 str2 str3\n"
+
+    bool res = exec::allTrue(true,true,true,false);//false
+
+    bool res2 = exec::anyTrue(false,true,false);//true
+
 ```
 
 Welcome to  submit questions, light up star , error corrections (even just for better translations), and feature suggestions/construction.  
 More content will continue to be added in the future. :D
-
-Look at these again:  
-
-- [one.h](https://github.com/moehoshio/one.h)
