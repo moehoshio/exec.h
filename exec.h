@@ -1,6 +1,6 @@
 // exec.h
 // cpp Lang
-// Version 0.01
+// Version 0.0.1
 // https://github.com/moehoshio/exec.h
 // MIT License
 // Welcome to  submit questions, light up star , error corrections (even just for better translations), and feature suggestions/construction.
