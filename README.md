@@ -76,13 +76,27 @@ here are some more examples:
     // Sometimes, operator precedence might be an issue. Use () to ensure the order of operations:
     std::cout<< (std::string("http://example.com:1082") | exec::isProxyAddress | boolTo) ; // cout std::string "true"
 
+
+
+     // use initializer list
+    auto oFunc = [] <typename T> (const std::initializer_list<T>& v){ std::vector vec{v}; for(const auto & it : vec) std::cout<<it;  return v;};
+
+    auto it = {std::string("01"),std::string("02")};
+
+    // Must use this approach, cannot directly construct an anonymous entity
+    (void) resList =  it | move | oFunc ;// cout std::string "0102"
+
+    // For types that satisfy the iterator requirements, the container traversal version will be selected. If not needed, it can be commented out or placed in a specific namespace.
+    auto/*vector<std::string>*/ vec = it | make_vector | [](auto&&v){std::cout<<v;} ;  // Iterate over the vector container and call the function with the values. Similar to oFunc
     
+
     
+
     constexpr int i = exec::sum(1,2,3,4); //10 (1+2+3+4)
 
     constexpr int i2 = exec::product(1,2,3,4); //24 (1*2*3*4)
 
-    auto it = exec::sum(std::string("str1 "),std::string("str2 "),std::string("str3\n"));//"str1 str2 str3\n"
+    auto strs = exec::sum(std::string("str1 "),std::string("str2 "),std::string("str3\n"));//"str1 str2 str3\n"
 
     bool res = exec::allTrue(true,true,true,false);//false
 

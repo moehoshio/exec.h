@@ -35,37 +35,55 @@ SOFTWARE.
 #include <regex>
 #include <string>
 
+// Sometimes, using third-party libraries may cause conflicts. You can place them in your own namespace.
+// Specifying namespaces can be cumbersome: namespace::operator|
+
+template <typename T>
+concept Range = std::ranges::range<T>;
+
 constexpr inline decltype(auto) operator|(auto &&val, auto &&func) {
     return func(std::forward<decltype(val)>(val));
+}
+
+template <class T, class F>
+constexpr inline decltype(auto) operator|(const std::initializer_list<T> &val, F &&func) {
+    return func(std::forward<std::initializer_list<T>>(val));
+}
+
+constexpr inline decltype(auto) operator|(Range auto &&val, auto &&func) {
+    for (const auto &it : val) {
+        func(val);
+    }
+    return val;
 }
 
 namespace exec {
 
     constexpr auto move = [](auto &&val) -> auto && { return std::move(val); };
     constexpr auto make_shared = [](auto &&val) -> decltype(auto) { return std::make_shared<std::remove_reference_t<decltype(val)>>(val); };
-    
+
     constexpr inline auto copy(const auto &d) {
         return d;
     };
 
     template <typename T = std::string>
-    constexpr inline static T boolTo(bool v, const T &rTrue = "true", const T &rFalse = "false") {
+    constexpr inline T boolTo(bool v, const T &rTrue = "true", const T &rFalse = "false") {
         return ((v) ? rTrue : rFalse);
     };
 
-    constexpr inline decltype(auto) sum(auto&&... args) {
+    constexpr inline decltype(auto) sum(auto &&...args) {
         return (args + ...);
     };
 
-    constexpr inline decltype(auto) product(auto&&... args) {
+    constexpr inline decltype(auto) product(auto &&...args) {
         return (args * ...);
     };
 
-    constexpr inline bool allTrue(auto&&... args) {
+    constexpr inline bool allTrue(auto &&...args) {
         return (true && ... && args);
     };
 
-    constexpr inline bool anyTrue(auto&&... args) {
+    constexpr inline bool anyTrue(auto &&...args) {
         return (false || ... || args);
     };
 
