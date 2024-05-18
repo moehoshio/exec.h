@@ -43,6 +43,7 @@ here are some more examples:
 
 ```cpp
 #include "exec.h"
+    using namespace exec;
 
     std::string boolStr = exec::boolTo(false);// std::string "false"
 
@@ -86,6 +87,7 @@ here are some more examples:
     // Must use this approach, cannot directly construct an anonymous entity
     (void) resList =  it | move | oFunc ;// cout std::string "0102"
 
+    using namespace exec::range;
     // For types that satisfy the iterator requirements, the container traversal version will be selected. If not needed, it can be commented out or placed in a specific namespace.
     auto/*vector<std::string>*/ vec = it | make_vector | [](auto&&v){std::cout<<v;} ;  // Iterate over the vector container and call the function with the values. Similar to oFunc
     

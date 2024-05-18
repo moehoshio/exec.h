@@ -1,6 +1,6 @@
 // exec.h
 // cpp Lang
-// Version 0.0.1
+// Version 0.0.2
 // https://github.com/moehoshio/exec.h
 // MIT License
 // Welcome to  submit questions, light up star , error corrections (even just for better translations), and feature suggestions/construction.
@@ -38,27 +38,27 @@ SOFTWARE.
 // Sometimes, using third-party libraries may cause conflicts. You can place them in your own namespace.
 // Specifying namespaces can be cumbersome: namespace::operator|
 
-template <typename T>
-concept Range = std::ranges::range<T>;
-
-constexpr inline decltype(auto) operator|(auto &&val, auto &&func) {
-    return func(std::forward<decltype(val)>(val));
-}
-
-template <class T, class F>
-constexpr inline decltype(auto) operator|(const std::initializer_list<T> &val, F &&func) {
-    return func(std::forward<std::initializer_list<T>>(val));
-}
-
-constexpr inline decltype(auto) operator|(Range auto &&val, auto &&func) {
-    for (const auto &it : val) {
-        func(val);
-    }
-    return val;
-}
-
 namespace exec {
 
+    template <typename T>
+    concept Range = std::ranges::range<T>;
+
+    constexpr inline decltype(auto) operator|(auto &&val, auto &&func) {
+        return func(std::forward<decltype(val)>(val));
+    }
+    namespace range {
+        constexpr inline decltype(auto) operator|(Range auto &&val, auto &&func) {
+            for (const auto &it : val) {
+                func(val);
+            }
+            return val;
+        }
+    } // namespace range
+
+    template <class T, class F>
+    constexpr inline decltype(auto) operator|(const std::initializer_list<T> &val, F &&func) {
+        return func(std::forward<std::initializer_list<T>>(val));
+    }
     constexpr auto move = [](auto &&val) -> auto && { return std::move(val); };
     constexpr auto make_shared = [](auto &&val) -> decltype(auto) { return std::make_shared<std::remove_reference_t<decltype(val)>>(val); };
 
