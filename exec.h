@@ -34,6 +34,7 @@ SOFTWARE.
 #include <random>
 #include <regex>
 #include <string>
+#include <vector>
 
 // Sometimes, using third-party libraries may cause conflicts. You can place them in your own namespace.
 // Specifying namespaces can be cumbersome: namespace::operator|
@@ -178,14 +179,12 @@ namespace exec {
 
             return fileExtension == targetExtension;
         }
-        LOG_F(INFO, "%s : End , false", FN);
 
         return false;
     }
-    inline bool matchExtNames(const std::string & name , const std::vector<std::string> & targetExtensions ){
-        for ( const auto &it : targetExtensions)
-        {
-            if (matchExtName(name,it)) {
+    inline bool matchExtNames(const std::string &name, const std::vector<std::string> &targetExtensions) {
+        for (const auto &it : targetExtensions) {
+            if (matchExtName(name, it)) {
                 return true;
             }
         }
