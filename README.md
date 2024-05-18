@@ -43,7 +43,7 @@ here are some more examples:
 
 ```cpp
 #include "exec.h"
-    using namespace exec;
+    
 
     std::string boolStr = exec::boolTo(false);// std::string "false"
 
@@ -51,6 +51,7 @@ here are some more examples:
     
     decltype(auto) minStr = exec::copy(std::min(std::string("1"),std::string("02")) );// string "1"
 
+    using namespace exec::op;
     decltype(auto) strShadPtr = std::string("str") | exec::move | exec::make_shared; //std::shared_ptr<std::string>
 
 
@@ -87,7 +88,7 @@ here are some more examples:
     // Must use this approach, cannot directly construct an anonymous entity
     (void) resList =  it | move | oFunc ;// cout std::string "0102"
 
-    using namespace exec::range;
+    using namespace exec::op::range;
     // For types that satisfy the iterator requirements, the container traversal version will be selected. If not needed, it can be commented out or placed in a specific namespace.
     auto/*vector<std::string>*/ vec = it | make_vector | [](auto&&v){std::cout<<v;} ;  // Iterate over the vector container and call the function with the values. Similar to oFunc
     
@@ -103,6 +104,9 @@ here are some more examples:
     bool res = exec::allTrue(true,true,true,false);//false
 
     bool res2 = exec::anyTrue(false,true,false);//true
+
+    bool res3 = exec::matchExtName("/home/main.cpp","txt");//false
+    bool res4 = exec::matchExtNames("/home/main.cpp",{"txt","cpp","hpp"});//true
 
 ```
 

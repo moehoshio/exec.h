@@ -40,25 +40,31 @@ SOFTWARE.
 
 namespace exec {
 
-    template <typename T>
-    concept Range = std::ranges::range<T>;
+    namespace op {
 
-    constexpr inline decltype(auto) operator|(auto &&val, auto &&func) {
-        return func(std::forward<decltype(val)>(val));
-    }
-    namespace range {
-        constexpr inline decltype(auto) operator|(Range auto &&val, auto &&func) {
-            for (const auto &it : val) {
-                func(val);
+        namespace range {
+
+            template <typename T>
+            concept Range = std::ranges::range<T>;
+            constexpr inline decltype(auto) operator|(Range auto &&val, auto &&func) {
+                for (const auto &it : val) {
+                    func(val);
+                }
+                return val;
             }
-            return val;
-        }
-    } // namespace range
+        } // namespace range
 
-    template <class T, class F>
-    constexpr inline decltype(auto) operator|(const std::initializer_list<T> &val, F &&func) {
-        return func(std::forward<std::initializer_list<T>>(val));
-    }
+        constexpr inline decltype(auto) operator|(auto &&val, auto &&func) {
+            return func(std::forward<decltype(val)>(val));
+        }
+
+        template <class T, class F>
+        constexpr inline decltype(auto) operator|(const std::initializer_list<T> &val, F &&func) {
+            return func(std::forward<std::initializer_list<T>>(val));
+        }
+
+    } // namespace op
+
     constexpr auto move = [](auto &&val) -> auto && { return std::move(val); };
     constexpr auto make_shared = [](auto &&val) -> decltype(auto) { return std::make_shared<std::remove_reference_t<decltype(val)>>(val); };
 
@@ -154,4 +160,35 @@ namespace exec {
         std::regex proxyRegex(R"((http|https|socks5|socks4)://([\w.-]+)(:\d+))");
         return std::regex_match(address, proxyRegex);
     };
+
+    inline bool matchExtName(const std::string &name, const std::string &targetExtension) {
+        if (name.empty() || targetExtension.empty())
+            return false;
+
+        size_t lastDotIndex = name.find_last_of('.');
+
+        if (lastDotIndex != std::string::npos) {
+            std::string fileExtension = name.substr(lastDotIndex + 1);
+
+#ifdef _WIN32
+            for (auto &c : fileExtension) {
+                c = tolower(c);
+            }
+#endif
+
+            return fileExtension == targetExtension;
+        }
+        LOG_F(INFO, "%s : End , false", FN);
+
+        return false;
+    }
+    inline bool matchExtNames(const std::string & name , const std::vector<std::string> & targetExtensions ){
+        for ( const auto &it : targetExtensions)
+        {
+            if (matchExtName(name,it)) {
+                return true;
+            }
+        }
+        return false;
+    }
 } // namespace exec
