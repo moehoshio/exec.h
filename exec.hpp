@@ -40,12 +40,17 @@ SOFTWARE.
 
 
 // hash
-#include <fstream>
-#include <iomanip>
+
+
+#if __has_include("openssl/md5.h") && __has_include("openssl/sha.h")
 #include <openssl/md5.h>
 #include <openssl/sha.h>
+#include <fstream>
+#include <iomanip>
 #include <sstream>
 #include <unordered_map>
+#endif
+
 
 namespace neko {
 
@@ -62,6 +67,7 @@ namespace neko {
 
 namespace exec {
 
+#if __has_include("openssl/md5.h") && __has_include("openssl/sha.h")
     namespace hashs {
         enum class Algorithm {
             none,
@@ -135,6 +141,7 @@ namespace exec {
     inline std::string hash(const std::string &hash, bool isFileName = false, hashs::Algorithm algorithm = hashs::Algorithm::sha256) {
         return (isFileName) ? hashFile(hash, algorithm) : hashStr(hash, algorithm);
     }
+#endif
 
     inline std::string base64Chars =
         "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
